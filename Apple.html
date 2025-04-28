@@ -1,0 +1,1150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apple Inc. - ESG & Financial Profile - ESG PIC</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- GSAP & ScrollTrigger -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/ScrollTrigger.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/ScrollToPlugin.min.js"></script>
+  <!-- Chart.js for Data Visualization -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Data Labels Plugin for Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+  <link rel="stylesheet" href="styles.css">
+  <!-- Custom Styles -->
+  <style>
+    /* Custom styles */
+    .navbar {
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    .navbar.scrolled {
+      background-color: white;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+    
+    /* Glass effect styles */
+    .table-container {
+      position: relative;
+    }
+    
+    .lock-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 142px; /* Exact height to cover last two rows */
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+      border-top: 1px solid rgba(229, 231, 235, 0.5);
+      border-bottom: 1px solid rgba(229, 231, 235, 0.5);
+    }
+    
+    .lock-icon {
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 15px;
+    }
+    
+    .unlock-button {
+      background: #16a34a;
+      color: white;
+      padding: 8px 16px;
+      border-radius: 4px;
+      font-size: 14px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    .unlock-button:hover {
+      background: #15803d;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    }
+
+    .metric-up {
+      color: #16a34a;
+    }
+    
+    .metric-down {
+      color: #dc2626;
+    }
+
+    .progress-bar {
+      height: 8px;
+      border-radius: 4px;
+      background-color: #e5e7eb;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      border-radius: 4px;
+      transition: width 1s ease-in-out;
+    }
+  </style>
+</head>
+<body class="bg-gray-50">
+  <!-- Navigation -->
+  <nav class="navbar fixed w-full z-50 py-3 top-0 bg-white backdrop-filter backdrop-blur-lg bg-opacity-80 border-b border-gray-200">
+    <div class="container mx-auto px-4 flex justify-between items-center">
+      <a href="homepage.html" class="flex items-center">
+        <img class="h-10" src="logo1.png" alt="ESG PIC Logo">
+      </a>
+      
+      <!-- Desktop Navigation -->
+      <div class="hidden md:flex space-x-8">
+        <a href="homepage.html" class="nav-link text-gray-600 hover:text-green-600">Home</a>
+        <a href="datacenter.html" class="nav-link text-gray-600 hover:text-green-600">Data Center</a>
+        <a href="community.html" class="nav-link text-gray-600 hover:text-green-600">Community</a>
+        <a href="#" class="nav-link bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-md transition duration-200">Login</a>
+      </div>
+      
+      <!-- Mobile menu button -->
+      <button id="menu-toggle" class="md:hidden text-gray-600 focus:outline-none">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+      </button>
+    </div>
+    
+    <!-- Mobile Navigation -->
+    <div id="mobile-menu" class="md:hidden hidden bg-white bg-opacity-90 backdrop-filter backdrop-blur-lg w-full border-b border-gray-200">
+      <div class="container mx-auto px-4 py-3">
+        <a href="homepage.html" class="block py-2 text-gray-600 hover:text-green-600 hover:bg-gray-50 px-3 rounded-md">Home</a>
+        <a href="datacenter.html" class="block py-2 text-gray-600 hover:text-green-600 hover:bg-gray-50 px-3 rounded-md">Data Center</a>
+        <a href="community.html" class="block py-2 text-gray-600 hover:text-green-600 hover:bg-gray-50 px-3 rounded-md">Community</a>
+        <a href="#" class="block py-2 text-white bg-green-600 hover:bg-green-700 px-3 rounded-md">Login</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Company Header Section -->
+  <section class="pt-24 pb-12 bg-gradient-to-r from-gray-900 to-gray-800 text-white">
+    <div class="container mx-auto px-4">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-8">
+        <div class="flex items-center">
+          <div class="bg-white p-4 rounded-xl shadow-lg mr-6 flex items-center justify-center w-28 h-28">
+            <img src="Apple.png" alt="Apple Inc. Logo" class="h-20 w-auto">
+            </div>
+          <div>
+            <div class="flex items-center gap-3">
+              <h1 class="text-4xl md:text-5xl font-bold">Apple Inc.</h1>
+              <span class="px-3 py-1 bg-green-600 text-white text-sm font-semibold rounded-full">AAA</span>
+            </div>
+            <div class="flex flex-wrap gap-x-6 gap-y-2 mt-3 whitespace-nowrap">
+              <span class="flex items-center text-gray-300">
+                <svg class="w-5 h-5 mr-2 text-green-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path>
+              </svg>
+                <span>NASDAQ: AAPL</span>
+              </span>
+              <span class="flex items-center text-gray-300">
+                <svg class="w-5 h-5 mr-2 text-green-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                </svg>
+                <span>164,000+ Employees</span>
+              </span>
+              <span class="flex items-center text-gray-300">
+                <svg class="w-5 h-5 mr-2 text-green-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                </svg>
+                <span>Cupertino, California</span>
+              </span>
+          </div>
+          </div>
+        </div>
+        
+        <div class="bg-white bg-opacity-10 backdrop-filter backdrop-blur-lg p-4 rounded-xl">
+          <div class="flex gap-8">
+            <div class="text-center">
+              <div class="text-green-400 text-2xl font-bold">$196.98</div>
+              <div class="text-sm text-gray-300">Current Price</div>
+              <div class="text-green-400 text-sm font-medium">+2.71 (1.39%)</div>
+            </div>
+            <div class="text-center">
+              <div class="text-white text-2xl font-bold">$2.96T</div>
+              <div class="text-sm text-gray-300">Market Cap</div>
+              <div class="text-red-400 text-sm font-medium">-21.34% YTD</div>
+            </div>
+            <div class="text-center">
+              <div class="text-white text-2xl font-bold">31.31</div>
+              <div class="text-sm text-gray-300">P/E Ratio</div>
+              <div class="text-gray-400 text-sm font-medium">Industry Avg: 25.2</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Quick Nav Tabs for Company Page -->
+      <div class="flex flex-wrap justify-center gap-2 mt-12">
+        <a href="#overview" class="px-4 py-2 bg-white bg-opacity-20 rounded-full text-sm font-medium hover:bg-opacity-30 transition">Overview</a>
+        <a href="#financial" class="px-4 py-2 bg-white bg-opacity-20 rounded-full text-sm font-medium hover:bg-opacity-30 transition">Financial Data</a>
+        <a href="#esg-metrics" class="px-4 py-2 bg-white bg-opacity-20 rounded-full text-sm font-medium hover:bg-opacity-30 transition">ESG Metrics</a>
+        <a href="#sentiment" class="px-4 py-2 bg-white bg-opacity-20 rounded-full text-sm font-medium hover:bg-opacity-30 transition">Sentiment Analysis</a>
+        <a href="#reports" class="px-4 py-2 bg-white bg-opacity-20 rounded-full text-sm font-medium hover:bg-opacity-30 transition">Reports</a>
+        <a href="#news" class="px-4 py-2 bg-white bg-opacity-20 rounded-full text-sm font-medium hover:bg-opacity-30 transition">News & Media</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Company Overview Section -->
+  <section id="overview" class="py-16 bg-white">
+    <div class="container mx-auto px-4">
+      <h2 class="text-3xl font-bold text-center section-title gradient mb-12">Company Overview</h2>
+      
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Company Description -->
+        <div class="lg:col-span-2">
+          <div class="bg-white rounded-xl shadow-md overflow-hidden h-full">
+          <div class="p-6">
+              <h3 class="text-xl font-bold text-gray-800 mb-4">About Apple Inc.</h3>
+              <p class="text-gray-600 mb-4">
+                Apple Inc. designs, manufactures, and markets smartphones, personal computers, tablets, wearables, and accessories worldwide. The company offers iPhone, a line of smartphones; Mac, a line of personal computers; iPad, a line of multi-purpose tablets; and wearables, home, and accessories comprising AirPods, Apple TV, Apple Watch, Beats products, and HomePod.
+              </p>
+              <p class="text-gray-600 mb-4">
+                It also provides AppleCare support and cloud services; and operates various platforms, including the App Store that allows customers to discover and download applications and digital content, such as books, music, video, games, and podcasts.
+              </p>
+              <p class="text-gray-600 mb-6">
+                Apple was incorporated in 1977 and is headquartered in Cupertino, California. The company has been at the forefront of technological innovation, creating products that have transformed how people communicate, work, and entertain themselves.
+              </p>
+              
+              <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+                <div class="bg-gray-50 p-4 rounded-lg">
+                  <div class="text-sm text-gray-500">Industry</div>
+                  <div class="font-medium">Technology</div>
+              </div>
+                <div class="bg-gray-50 p-4 rounded-lg">
+                  <div class="text-sm text-gray-500">Founded</div>
+                  <div class="font-medium">April 1, 1976</div>
+            </div>
+                <div class="bg-gray-50 p-4 rounded-lg">
+                  <div class="text-sm text-gray-500">CEO</div>
+                  <div class="font-medium">Tim Cook</div>
+            </div>
+                <div class="bg-gray-50 p-4 rounded-lg">
+                  <div class="text-sm text-gray-500">Fiscal Year End</div>
+                  <div class="font-medium">September</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- ESG Score Summary -->
+        <div>
+          <div class="bg-white rounded-xl shadow-md overflow-hidden h-full">
+          <div class="p-6">
+              <h3 class="text-xl font-bold text-gray-800 mb-4">ESG Performance Summary</h3>
+              
+              <!-- Overall ESG Score -->
+              <div class="bg-green-50 p-4 rounded-lg mb-6 border border-green-100">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="text-gray-600 font-medium">Overall ESG Score</span>
+                  <span class="text-green-600 font-bold text-lg">92/100</span>
+              </div>
+                <div class="progress-bar">
+                  <div class="progress-bar-fill bg-green-500" style="width: 92%"></div>
+                </div>
+                <div class="mt-2 flex justify-between text-xs text-gray-500">
+                  <span>0</span>
+                  <span>50</span>
+                  <span>100</span>
+                </div>
+                <div class="mt-3 text-center">
+                  <span class="px-3 py-1 bg-green-100 text-green-800 text-sm font-semibold rounded-full">AAA Rating</span>
+                </div>
+            </div>
+            
+              <!-- E, S, G Breakdown -->
+              <div class="space-y-4">
+                <div>
+                  <div class="flex items-center justify-between mb-1">
+                    <span class="text-gray-600">Environmental</span>
+                    <span class="text-green-600 font-bold">94/100</span>
+                </div>
+                  <div class="progress-bar">
+                    <div class="progress-bar-fill bg-green-500" style="width: 94%"></div>
+                </div>
+              </div>
+              
+                <div>
+                  <div class="flex items-center justify-between mb-1">
+                    <span class="text-gray-600">Social</span>
+                    <span class="text-green-600 font-bold">88/100</span>
+                </div>
+                  <div class="progress-bar">
+                    <div class="progress-bar-fill bg-green-500" style="width: 88%"></div>
+                </div>
+              </div>
+              
+                <div>
+                  <div class="flex items-center justify-between mb-1">
+                    <span class="text-gray-600">Governance</span>
+                    <span class="text-green-600 font-bold">90/100</span>
+                </div>
+                  <div class="progress-bar">
+                    <div class="progress-bar-fill bg-green-500" style="width: 90%"></div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Peer Comparison -->
+              <div class="mt-6">
+                <h4 class="font-semibold text-gray-700 mb-3">Peer Comparison</h4>
+                <div class="space-y-3">
+                  <div class="flex items-center">
+                    <span class="w-24 text-sm text-gray-500">Apple</span>
+                    <div class="flex-1 mx-2">
+                      <div class="h-2 bg-green-500 rounded" style="width: 92%"></div>
+                  </div>
+                    <span class="text-sm font-medium">92</span>
+                  </div>
+                  <div class="flex items-center">
+                    <span class="w-24 text-sm text-gray-500">Microsoft</span>
+                    <div class="flex-1 mx-2">
+                      <div class="h-2 bg-green-500 rounded" style="width: 89%"></div>
+                  </div>
+                    <span class="text-sm font-medium">89</span>
+                  </div>
+                  <div class="flex items-center">
+                    <span class="w-24 text-sm text-gray-500">Google</span>
+                    <div class="flex-1 mx-2">
+                      <div class="h-2 bg-green-500 rounded" style="width: 84%"></div>
+                    </div>
+                    <span class="text-sm font-medium">84</span>
+                  </div>
+                  <div class="flex items-center">
+                    <span class="w-24 text-sm text-gray-500">Industry Avg</span>
+                    <div class="flex-1 mx-2">
+                      <div class="h-2 bg-yellow-500 rounded" style="width: 72%"></div>
+                  </div>
+                    <span class="text-sm font-medium">78</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Financial Data Section -->
+  <section id="financial" class="py-16 bg-gray-50">
+    <div class="container mx-auto px-4">
+      <h2 class="text-3xl font-bold text-center section-title gradient mb-12">Financial Performance</h2>
+      
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+        <!-- Key Financial Metrics -->
+        <div class="bg-white rounded-xl shadow-md overflow-hidden">
+          <div class="bg-gray-800 py-3 px-6">
+            <h3 class="text-white font-semibold">Key Financial Metrics</h3>
+          </div>
+          <div class="p-6">
+            <div class="grid grid-cols-2 gap-6">
+              <div>
+                <p class="text-sm text-gray-500 mb-1 whitespace-nowrap">Revenue (FY 2024)</p>
+                <p class="text-2xl font-bold">$395.76B</p>
+                <p class="text-sm metric-up">+2.61% YoY</p>
+              </div>
+              <div>
+                <p class="text-sm text-gray-500 mb-1">Net Income</p>
+                <p class="text-2xl font-bold">$96.15B</p>
+                <p class="text-sm metric-down">-2.14% YoY</p>
+              </div>
+              <div>
+                <p class="text-sm text-gray-500 mb-1">Operating Margin</p>
+                <p class="text-2xl font-bold">31.76%</p>
+                <p class="text-sm metric-up">+0.86% YoY</p>
+              </div>
+              <div>
+                <p class="text-sm text-gray-500 mb-1">EPS (Diluted)</p>
+                <p class="text-2xl font-bold">$6.30</p>
+                <p class="text-sm metric-up">+2.60% YoY</p>
+              </div>
+              <div>
+                <p class="text-sm text-gray-500 mb-1">Free Cash Flow</p>
+                <p class="text-2xl font-bold">$93.83B</p>
+                <p class="text-sm metric-down">-4.63% YoY</p>
+              </div>
+              <div>
+                <p class="text-sm text-gray-500 mb-1">Dividend Yield</p>
+                <p class="text-2xl font-bold">0.51%</p>
+                <p class="text-sm text-gray-500">Quarterly: $0.25</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Revenue Breakdown -->
+        <div class="bg-white rounded-xl shadow-md overflow-hidden">
+          <div class="bg-gray-800 py-3 px-6">
+            <h3 class="text-white font-semibold">Revenue Breakdown by Product</h3>
+          </div>
+          <div class="p-6">
+            <div class="aspect-w-1 aspect-h-1 relative h-60 flex justify-center">
+              <canvas id="revenueBreakdown"></canvas>
+              </div>
+            <div class="flex justify-center mt-4 flex-wrap" style="max-width: 300px; margin: 1 auto;">
+              <div class="flex items-center mx-2 my-1 w-[calc(50%-1rem)]">
+                <div class="w-2 h-2 bg-blue-500 rounded-full mr-1 flex-shrink-0"></div>
+                <span class="text-xs text-gray-600 whitespace-nowrap">iPhone: 54.4%</span>
+              </div>
+              <div class="flex items-center mx-2 my-1 w-[calc(50%-1rem)]">
+                <div class="w-2 h-2 bg-indigo-500 rounded-full mr-1 flex-shrink-0"></div>
+                <span class="text-xs text-gray-600 whitespace-nowrap">Mac: 9.5%</span>
+              </div>
+              <div class="flex items-center mx-2 my-1 w-[calc(50%-1rem)]">
+                <div class="w-2 h-2 bg-purple-500 rounded-full mr-1 flex-shrink-0"></div>
+                <span class="text-xs text-gray-600 whitespace-nowrap">iPad: 7.1%</span>
+              </div>
+              <div class="flex items-center mx-2 my-1 w-[calc(50%-1rem)]">
+                <div class="w-2 h-2 bg-pink-500 rounded-full mr-1 flex-shrink-0"></div>
+                <span class="text-xs text-gray-600 whitespace-nowrap">Wearables: 11.2%</span>
+              </div>
+              <div class="flex items-center mx-2 my-1 w-full" style="padding-left: 0%;">
+                <div class="w-2 h-2 bg-green-500 rounded-full mr-1 flex-shrink-0"></div>
+                <span class="text-xs text-gray-600 whitespace-nowrap">Services: 17.8%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Stock Performance -->
+        <div class="bg-white rounded-xl shadow-md overflow-hidden">
+          <div class="bg-gray-800 py-3 px-6">
+            <h3 class="text-white font-semibold">Stock Performance (5 Years)</h3>
+          </div>
+          <div class="p-6">
+            <div class="aspect-w-2 aspect-h-1 relative h-30 justify-center">
+              <canvas id="stockPerformance"></canvas>
+              </div>
+            <div class="grid grid-cols-3 gap-4 mt-4 text-center">
+              <div>
+                <p class="text-sm text-gray-500">1 Year</p>
+                <p class="font-bold text-green-600">+26.1%</p>
+              </div>
+              <div>
+                <p class="text-sm text-gray-500">3 Year</p>
+                <p class="font-bold text-green-600">+135.4%</p>
+              </div>
+              <div>
+                <p class="text-sm text-gray-500">5 Year</p>
+                <p class="font-bold text-green-600">+374.9%</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Financial Statements -->
+      <div class="bg-white rounded-xl shadow-md overflow-hidden mb-8">
+        <div class="bg-gray-800 py-3 px-6 flex justify-between items-center">
+          <h3 class="text-white font-semibold">Financial Statements</h3>
+          <div class="flex space-x-2">
+            <button class="px-3 py-1 bg-gray-700 text-white text-sm rounded hover:bg-gray-600 transition">Quarterly</button>
+            <button class="px-3 py-1 bg-gray-600 text-white text-sm rounded hover:bg-gray-600 transition">Annual</button>
+        </div>
+      </div>
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fiscal Year</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">2023</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">2022</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">2021</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">2020</th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              <tr>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Revenue</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">$383.29B</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">$365.82B</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">$347.16B</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">$274.52B</td>
+              </tr>
+              <tr>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Gross Profit</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">$170.78B</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">$163.84B</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">$152.84B</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">$105.24B</td>
+              </tr>
+              <tr>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Operating Income</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">$115.22B</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">$114.82B</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">$109.21B</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">$66.29B</td>
+              </tr>
+              <tr>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Net Income</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">$96.99B</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">$94.68B</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">$94.68B</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">$57.41B</td>
+              </tr>
+              <tr>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">EPS (Diluted)</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">$6.14</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">$5.61</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">$5.11</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">$3.28</td>
+              </tr>
+              <tr>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">R&D Expenses</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">$24.95B</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">$22.61B</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">$18.75B</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">$16.22B</td>
+              </tr>
+            </tbody>
+          </table>
+                    </div>
+                    </div>
+      
+      <div class="text-center">
+        <a href="#" class="inline-flex items-center px-6 py-3 border border-green-600 text-green-600 bg-white rounded-md shadow-sm font-medium hover:bg-green-600 hover:text-white focus:outline-none transition duration-300">
+          Download Full Financial Report
+          <svg class="ml-2 -mr-1 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+        </a>
+                    </div>
+                    </div>
+  </section>
+
+  <!-- ESG Metrics Section -->
+  <section id="esg-metrics" class="py-16 bg-white">
+    <div class="container mx-auto px-4">
+      <h2 class="text-3xl font-bold text-center section-title gradient mb-12">ESG Metrics & Achievements</h2>
+      
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+        <!-- Environmental Metrics -->
+        <div class="bg-white rounded-xl shadow-md overflow-hidden border-t-4 border-green-500">
+          <div class="p-6">
+            <div class="flex items-center mb-6">
+              <div class="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center mr-4">
+                <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path>
+                </svg>
+                    </div>
+              <div>
+                <h3 class="text-xl font-bold text-gray-800">Environmental</h3>
+                <p class="text-green-600 font-medium">94/100 - Leader</p>
+                    </div>
+                  </div>
+            
+            <div class="space-y-6">
+              <div>
+                <div class="flex justify-between mb-1">
+                  <span class="text-sm font-medium text-gray-700">Carbon Neutrality</span>
+                  <span class="text-sm font-medium text-green-600">100%</span>
+                    </div>
+                <div class="w-full bg-gray-200 rounded-full h-2">
+                  <div class="bg-green-500 h-2 rounded-full" style="width: 100%"></div>
+                    </div>
+                <p class="mt-2 text-xs text-gray-500">
+                  Apple's global corporate operations have been carbon neutral since 2020. The company aims to make its entire supply chain carbon neutral by 2030.
+                </p>
+                  </div>
+              
+              <div>
+                <div class="flex justify-between mb-1">
+                  <span class="text-sm font-medium text-gray-700">Renewable Energy</span>
+                  <span class="text-sm font-medium text-green-600">100%</span>
+                    </div>
+                <div class="w-full bg-gray-200 rounded-full h-2">
+                  <div class="bg-green-500 h-2 rounded-full" style="width: 100%"></div>
+                    </div>
+                <p class="mt-2 text-xs text-gray-500">
+                  All Apple facilities worldwide are powered by 100% renewable energy. The company is also working with suppliers to transition to clean energy.
+                </p>
+                  </div>
+              
+              <div>
+                <div class="flex justify-between mb-1">
+                  <span class="text-sm font-medium text-gray-700">Water Stewardship</span>
+                  <span class="text-sm font-medium text-green-600">92%</span>
+            </div>
+                <div class="w-full bg-gray-200 rounded-full h-2">
+                  <div class="bg-green-500 h-2 rounded-full" style="width: 92%"></div>
+          </div>
+                <p class="mt-2 text-xs text-gray-500">
+                  Implemented comprehensive water management programs in water-stressed regions, achieving 40% water reduction in manufacturing processes.
+                </p>
+        </div>
+        
+            <div>
+                <div class="flex justify-between mb-1">
+                  <span class="text-sm font-medium text-gray-700">Product Recycling</span>
+                  <span class="text-sm font-medium text-green-600">85%</span>
+            </div>
+                <div class="w-full bg-gray-200 rounded-full h-2">
+                  <div class="bg-green-500 h-2 rounded-full" style="width: 85%"></div>
+            </div>
+                <p class="mt-2 text-xs text-gray-500">
+                  Apple's recycling programs recovered 61 million pounds of materials in 2023, with a commitment to using only recycled or renewable materials in products.
+                </p>
+          </div>
+        </div>
+      </div>
+    </div>
+        
+        <!-- Social Metrics -->
+        <div class="bg-white rounded-xl shadow-md overflow-hidden border-t-4 border-blue-500">
+          <div class="p-6">
+            <div class="flex items-center mb-6">
+              <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center mr-4">
+                <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                </svg>
+              </div>
+              <div>
+                <h3 class="text-xl font-bold text-gray-800">Social</h3>
+                <p class="text-blue-600 font-medium">88/100 - Leader</p>
+          </div>
+        </div>
+        
+            <div class="space-y-6">
+              <div>
+                <div class="flex justify-between mb-1">
+                  <span class="text-sm font-medium text-gray-700">Diversity & Inclusion</span>
+                  <span class="text-sm font-medium text-blue-600">87%</span>
+              </div>
+                <div class="w-full bg-gray-200 rounded-full h-2">
+                  <div class="bg-blue-500 h-2 rounded-full" style="width: 87%"></div>
+              </div>
+                <p class="mt-2 text-xs text-gray-500">
+                  Increased representation of underrepresented minorities by 18% in leadership positions. Committed to gender pay equity globally.
+                </p>
+            </div>
+            
+              <div>
+                <div class="flex justify-between mb-1">
+                  <span class="text-sm font-medium text-gray-700">Supply Chain Labor</span>
+                  <span class="text-sm font-medium text-blue-600">90%</span>
+              </div>
+                <div class="w-full bg-gray-200 rounded-full h-2">
+                  <div class="bg-blue-500 h-2 rounded-full" style="width: 90%"></div>
+              </div>
+                <p class="mt-2 text-xs text-gray-500">
+                  Conducts rigorous supplier assessments to ensure fair labor practices. Trained over 23 million workers on rights awareness since 2008.
+                </p>
+            </div>
+            
+              <div>
+                <div class="flex justify-between mb-1">
+                  <span class="text-sm font-medium text-gray-700">Community Impact</span>
+                  <span class="text-sm font-medium text-blue-600">92%</span>
+              </div>
+                <div class="w-full bg-gray-200 rounded-full h-2">
+                  <div class="bg-blue-500 h-2 rounded-full" style="width: 92%"></div>
+              </div>
+                <p class="mt-2 text-xs text-gray-500">
+                  Donated over $365 million to charitable causes in 2023. Expanded education initiatives to serve underprivileged communities worldwide.
+                </p>
+            </div>
+            
+              <div>
+                <div class="flex justify-between mb-1">
+                  <span class="text-sm font-medium text-gray-700">Privacy & Data Security</span>
+                  <span class="text-sm font-medium text-blue-600">95%</span>
+              </div>
+                <div class="w-full bg-gray-200 rounded-full h-2">
+                  <div class="bg-blue-500 h-2 rounded-full" style="width: 95%"></div>
+              </div>
+                <p class="mt-2 text-xs text-gray-500">
+                  Industry-leading privacy practices with transparent data collection policies. Privacy features built into all products by design.
+                </p>
+              </div>
+            </div>
+              </div>
+            </div>
+            
+        <!-- Governance Metrics -->
+        <div class="bg-white rounded-xl shadow-md overflow-hidden border-t-4 border-purple-500">
+          <div class="p-6">
+            <div class="flex items-center mb-6">
+              <div class="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center mr-4">
+                <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+              </div>
+              <div>
+                <h3 class="text-xl font-bold text-gray-800">Governance</h3>
+                <p class="text-purple-600 font-medium">90/100 - Leader</p>
+              </div>
+            </div>
+            
+            <div class="space-y-6">
+              <div>
+                <div class="flex justify-between mb-1">
+                  <span class="text-sm font-medium text-gray-700">Board Diversity</span>
+                  <span class="text-sm font-medium text-purple-600">85%</span>
+              </div>
+                <div class="w-full bg-gray-200 rounded-full h-2">
+                  <div class="bg-purple-500 h-2 rounded-full" style="width: 85%"></div>
+              </div>
+                <p class="mt-2 text-xs text-gray-500">
+                  50% of Apple's board members are from underrepresented communities. 33% of directors are women, exceeding industry average.
+                </p>
+            </div>
+            
+              <div>
+                <div class="flex justify-between mb-1">
+                  <span class="text-sm font-medium text-gray-700">Business Ethics</span>
+                  <span class="text-sm font-medium text-purple-600">94%</span>
+              </div>
+                <div class="w-full bg-gray-200 rounded-full h-2">
+                  <div class="bg-purple-500 h-2 rounded-full" style="width: 94%"></div>
+              </div>
+                <p class="mt-2 text-xs text-gray-500">
+                  Robust code of conduct and anti-corruption policies. Regular ethics training for all employees with 99.7% completion rate.
+                </p>
+              </div>
+              
+              <div>
+                <div class="flex justify-between mb-1">
+                  <span class="text-sm font-medium text-gray-700">Executive Compensation</span>
+                  <span class="text-sm font-medium text-purple-600">88%</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2">
+                  <div class="bg-purple-500 h-2 rounded-full" style="width: 88%"></div>
+                </div>
+                <p class="mt-2 text-xs text-gray-500">
+                  Executive compensation linked to ESG performance metrics. Transparent pay ratio disclosure with stakeholder engagement.
+                </p>
+            </div>
+            
+              <div>
+                <div class="flex justify-between mb-1">
+                  <span class="text-sm font-medium text-gray-700">Sustainability Governance</span>
+                  <span class="text-sm font-medium text-purple-600">93%</span>
+              </div>
+                <div class="w-full bg-gray-200 rounded-full h-2">
+                  <div class="bg-purple-500 h-2 rounded-full" style="width: 93%"></div>
+              </div>
+                <p class="mt-2 text-xs text-gray-500">
+                  Board-level Environmental and Social Policy Committee oversees sustainability initiatives. Transparent annual reporting on ESG goals.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Key ESG Initiatives -->
+      <h3 class="text-2xl font-bold text-gray-800 mb-6">Key ESG Initiatives</h3>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+        <!-- Initiative 1 -->
+        <div class="bg-white rounded-xl shadow-md overflow-hidden flex">
+          <div class="w-1/3 bg-cover bg-center hidden md:block" style="background-image: url('https://images.unsplash.com/photo-1595437193398-f24279553f4f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80')"></div>
+          <div class="p-6 w-full md:w-2/3">
+            <h4 class="text-lg font-bold text-gray-800 mb-2">Apple Renewable Energy Projects</h4>
+            <p class="text-gray-600 mb-4">
+              Apple has invested in 2.7 gigawatts of clean energy projects worldwide, helping suppliers transition to 100% renewable electricity.
+            </p>
+            <div class="flex items-center mt-4">
+              <span class="bg-green-100 text-green-800 text-xs font-semibold px-2.5 py-0.5 rounded">Environmental</span>
+              <span class="bg-green-100 text-green-800 text-xs font-semibold px-2.5 py-0.5 rounded ml-2">Climate Action</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Initiative 2 -->
+        <div class="bg-white rounded-xl shadow-md overflow-hidden flex">
+          <div class="w-1/3 bg-cover bg-center hidden md:block" style="background-image: url('https://images.unsplash.com/photo-1600294037681-c80b4cb5b434?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80')"></div>
+          <div class="p-6 w-full md:w-2/3">
+            <h4 class="text-lg font-bold text-gray-800 mb-2">Circular Materials Supply Chain</h4>
+            <p class="text-gray-600 mb-4">
+              Apple has pioneered the use of recycled materials in products, including 100% recycled rare earth elements in iPhone magnets and 100% recycled aluminum enclosures.
+            </p>
+            <div class="flex items-center mt-4">
+              <span class="bg-green-100 text-green-800 text-xs font-semibold px-2.5 py-0.5 rounded">Environmental</span>
+              <span class="bg-green-100 text-green-800 text-xs font-semibold px-2.5 py-0.5 rounded ml-2">Circular Economy</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Initiative 3 -->
+        <div class="bg-white rounded-xl shadow-md overflow-hidden flex">
+          <div class="w-1/3 bg-cover bg-center hidden md:block" style="background-image: url('https://images.unsplash.com/photo-1529390079861-591de354faf5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8ZGl2ZXJzaXR5fGVufDB8fDB8fHww&auto=format&fit=crop&w=800&q=60')"></div>
+          <div class="p-6 w-full md:w-2/3">
+            <h4 class="text-lg font-bold text-gray-800 mb-2">Racial Equity and Justice Initiative</h4>
+            <p class="text-gray-600 mb-4">
+              $100 million commitment to support organizations addressing racial equity and justice, including investments in education, economic empowerment, and criminal justice reform.
+            </p>
+            <div class="flex items-center mt-4">
+              <span class="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded">Social</span>
+              <span class="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded ml-2">Diversity & Inclusion</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Initiative 4 -->
+        <div class="bg-white rounded-xl shadow-md overflow-hidden flex">
+          <div class="w-1/3 bg-cover bg-center hidden md:block" style="background-image: url('https://images.unsplash.com/photo-1581091226033-d5c48150dbaa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80')"></div>
+          <div class="p-6 w-full md:w-2/3">
+            <h4 class="text-lg font-bold text-gray-800 mb-2">Responsible Sourcing Program</h4>
+            <p class="text-gray-600 mb-4">
+              Thorough supply chain audits and assessments to ensure responsible sourcing of minerals and ethical labor practices throughout the entire supply chain.
+            </p>
+            <div class="flex items-center mt-4">
+              <span class="bg-purple-100 text-purple-800 text-xs font-semibold px-2.5 py-0.5 rounded">Governance</span>
+              <span class="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded ml-2">Human Rights</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="text-center">
+        <a href="#" class="inline-flex items-center px-6 py-3 border border-green-600 text-green-600 bg-white rounded-md shadow-sm font-medium hover:bg-green-600 hover:text-white focus:outline-none transition duration-300">
+          Download Full ESG Report
+          <svg class="ml-2 -mr-1 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gray-900 py-16 border-t-4 border-green-500">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div>
+          <h3 class="text-white text-xl font-bold mb-4">ESG PIC</h3>
+          <p class="text-gray-400 mb-6">Sustainable Development Information Platform - Providing comprehensive ESG data analysis and evaluation services.</p>
+          <div class="flex space-x-4">
+            <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:text-white hover:bg-blue-600 transition-colors duration-300">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" />
+              </svg>
+            </a>
+            <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:text-white hover:bg-pink-600 transition-colors duration-300">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
+              </svg>
+            </a>
+            <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:text-white hover:bg-black transition-colors duration-300">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z" />
+              </svg>
+            </a>
+          </div>
+        </div>
+        
+        <!-- Quick Links -->
+        <div>
+          <h3 class="text-white text-xl font-bold mb-4">Quick Links</h3>
+          <ul class="text-gray-400">
+            <li class="mb-3">
+              <a href="homepage.html" class="hover:text-green-500 transition-colors duration-300 flex items-center">
+                <svg class="w-4 h-4 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+                Home
+              </a>
+            </li>
+            <li class="mb-3">
+              <a href="datacenter.html" class="hover:text-green-500 transition-colors duration-300 flex items-center">
+                <svg class="w-4 h-4 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+                ESG Data Center
+              </a>
+            </li>
+            <li class="mb-3">
+              <a href="datacenter.html" class="hover:text-green-500 transition-colors duration-300 flex items-center">
+                <svg class="w-4 h-4 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+                ESG Rating System
+              </a>
+            </li>
+            <li class="mb-3">
+              <a href="community.html" class="hover:text-green-500 transition-colors duration-300 flex items-center">
+                <svg class="w-4 h-4 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+                Community Forum
+              </a>
+            </li>
+          </ul>
+        </div>
+        
+        <!-- Additional Info -->
+        <div>
+          <h3 class="text-white text-xl font-bold mb-4">Subscribe</h3>
+          <p class="text-gray-400 mb-4">Subscribe to our newsletter to receive the latest updates and news about ESG developments.</p>
+          <div class="flex">
+            <input type="email" placeholder="Your email" class="bg-gray-800 text-white px-4 py-2 rounded-l focus:outline-none focus:ring-2 focus:ring-green-500 w-full">
+            <button class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-r transition-colors duration-300">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Bottom Footer -->
+      <div class="border-t border-gray-800 mt-12 pt-8 text-gray-400 text-sm">
+        <div class="flex flex-col md:flex-row md:justify-between">
+          <div class="mb-4 md:mb-0">
+            <p>&copy; 2025 ESG PIC. All rights reserved.</p>
+          </div>
+          <div class="flex space-x-4">
+            <a href="#" class="hover:text-green-500 transition-colors duration-300">Privacy Policy</a>
+            <a href="#" class="hover:text-green-500 transition-colors duration-300">Terms of Service</a>
+            <a href="#" class="hover:text-green-500 transition-colors duration-300">Cookie Policy</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Mobile menu toggle
+      const menuToggle = document.getElementById('menu-toggle');
+      const mobileMenu = document.getElementById('mobile-menu');
+      
+      if (menuToggle && mobileMenu) {
+        menuToggle.addEventListener('click', function() {
+          mobileMenu.classList.toggle('hidden');
+        });
+      }
+
+      // Navigation scroll effect
+      window.addEventListener('scroll', function() {
+        const navbar = document.querySelector('.navbar');
+        if (window.scrollY > 50) {
+          navbar.classList.add('scrolled');
+        } else {
+          navbar.classList.remove('scrolled');
+        }
+      });
+
+      // Initialize Chart.js charts
+        Chart.register(ChartDataLabels);
+        
+      // Revenue Breakdown Chart
+      const revenueBreakdownCtx = document.getElementById('revenueBreakdown');
+      if (revenueBreakdownCtx) {
+        new Chart(revenueBreakdownCtx, {
+          type: 'doughnut',
+          data: {
+            labels: ['iPhone', 'Mac', 'iPad', 'Wearables', 'Services'],
+            datasets: [{
+              data: [54.4, 9.5, 7.1, 11.2, 17.8],
+              backgroundColor: [
+                '#3b82f6', // blue
+                '#6366f1', // indigo
+                '#a855f7', // purple
+                '#ec4899', // pink
+                '#22c55e'  // green
+              ],
+              borderWidth: 0
+            }]
+          },
+          options: {
+            responsive: true,
+            cutout: '70%',
+            plugins: {
+              legend: {
+                display: false
+              },
+              tooltip: {
+                callbacks: {
+                  label: function(context) {
+                    const label = context.label || '';
+                    const value = context.raw || 0;
+                    return `${label}: ${value}%`;
+                  }
+                }
+              },
+              datalabels: {
+                color: '#ffffff',
+                  font: {
+                  weight: 'bold',
+                  size: 10
+                },
+                formatter: (value) => {
+                  return `${value}%`;
+                }
+              }
+            }
+          }
+        });
+      }
+      
+      // Stock Performance Chart
+      const stockPerformanceCtx = document.getElementById('stockPerformance');
+      if (stockPerformanceCtx) {
+        new Chart(stockPerformanceCtx, {
+          type: 'line',
+          data: {
+            labels: ['2019', '2020', '2021', '2022', '2023', '2024'],
+            datasets: [
+              {
+                label: 'Apple',
+                data: [58, 82, 134, 142, 168, 194],
+                borderColor: '#22c55e',
+                backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                borderWidth: 2,
+                fill: true,
+                tension: 0.3
+              },
+              {
+                label: 'S&P 500',
+                data: [50, 58, 73, 67, 78, 92],
+                borderColor: '#6b7280',
+                borderWidth: 2,
+                borderDash: [5, 5],
+                fill: false,
+                tension: 0.3
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: {
+                position: 'top',
+              },
+              tooltip: {
+                mode: 'index',
+                intersect: false,
+              },
+              datalabels: {
+                display: false
+              }
+            },
+            scales: {
+              y: {
+                beginAtZero: false,
+              title: {
+                  display: true,
+                  text: 'Stock Price ($)'
+                }
+              }
+            }
+          }
+        });
+      }
+      
+      // Sentiment Trend Chart
+      const sentimentTrendCtx = document.getElementById('sentimentTrend');
+      if (sentimentTrendCtx) {
+        new Chart(sentimentTrendCtx, {
+          type: 'line',
+          data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            datasets: [{
+              label: 'Sentiment Score',
+              data: [65, 67, 70, 68, 72, 75, 74, 78, 82, 84, 82, 86],
+              borderColor: '#3b82f6',
+              backgroundColor: 'rgba(59, 130, 246, 0.1)',
+              borderWidth: 2,
+              fill: true,
+              tension: 0.4
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: {
+                display: false
+              },
+              tooltip: {
+                callbacks: {
+                  label: function(context) {
+                    return `Sentiment: ${context.raw}/100`;
+                  }
+                }
+              },
+              datalabels: {
+                display: false
+              }
+            },
+            scales: {
+              y: {
+                min: 50,
+                max: 100,
+                ticks: {
+                  stepSize: 10
+                }
+              }
+            }
+          }
+        });
+      }
+      
+      // Media Volume Chart
+      const mediaVolumeCtx = document.getElementById('mediaVolume');
+      if (mediaVolumeCtx) {
+        new Chart(mediaVolumeCtx, {
+          type: 'bar',
+          data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            datasets: [{
+              label: 'Media Mentions',
+              data: [1850, 1920, 2480, 2150, 1980, 2340, 2080, 2250, 2780, 3150, 2620, 2400],
+              backgroundColor: 'rgba(79, 70, 229, 0.7)'
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: {
+                display: false
+              },
+              datalabels: {
+                display: false
+              }
+            },
+            scales: {
+              y: {
+                beginAtZero: true,
+                ticks: {
+                  callback: function(value) {
+                    if (value >= 1000) {
+                      return value / 1000 + 'k';
+                    }
+                    return value;
+                  }
+                }
+              }
+            }
+          }
+        });
+      }
+    });
+  </script>
+</body>
+</html> 

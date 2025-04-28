@@ -1,0 +1,1175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ESG Data Center - ESG PIC</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- GSAP & ScrollTrigger -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/ScrollTrigger.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/ScrollToPlugin.min.js"></script>
+  <!-- Chart.js for Data Visualization -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Chart.js数据标签插件 - 用于在饼图上显示百分比 -->
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+  <link rel="stylesheet" href="styles.css">
+  <!-- 在head部分添加自定义样式 -->
+  <style>
+    /* Custom styles */
+    .navbar {
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    .navbar.scrolled {
+      background-color: white;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+    
+    /* 添加毛玻璃效果样式 */
+    .table-container {
+      position: relative;
+    }
+    
+    .lock-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 142px; /* 精确覆盖最后两行 */
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+      border-top: 1px solid rgba(229, 231, 235, 0.5);
+      border-bottom: 1px solid rgba(229, 231, 235, 0.5);
+    }
+    
+    .lock-icon {
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 15px;
+    }
+    
+    .unlock-button {
+      background: #16a34a;
+      color: white;
+      padding: 8px 16px;
+      border-radius: 4px;
+      font-size: 14px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    .unlock-button:hover {
+      background: #15803d;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    }
+  </style>
+</head>
+<body class="bg-gray-50">
+  <!-- Navigation -->
+  <nav class="navbar fixed w-full z-50 py-3 top-0 bg-white backdrop-filter backdrop-blur-lg bg-opacity-80 border-b border-gray-200">
+    <div class="container mx-auto px-4 flex justify-between items-center">
+      <a href="homepage.html" class="flex items-center ml-0">
+        <img class="h-10" src="logo1.png" alt="ESG PIC Logo">
+      </a>
+      
+      <!-- Desktop Navigation -->
+      <div class="hidden md:flex space-x-8 ml-auto">
+        <a href="homepage.html" class="nav-link text-gray-600 hover:text-green-600">Home</a>
+        <a href="datacenter.html" class="nav-link text-green-600 border-b-2 border-green-600 pb-1">Data Center</a>
+        <a href="community.html" class="nav-link text-gray-600 hover:text-green-600">Community</a>
+        <a href="#" class="nav-link bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-md transition duration-200">Login</a>
+      </div>
+      
+      <!-- Mobile menu button -->
+      <button id="menu-toggle" class="md:hidden text-gray-600 focus:outline-none">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+      </button>
+    </div>
+    
+    <!-- Mobile Navigation -->
+    <div id="mobile-menu" class="md:hidden hidden bg-white bg-opacity-90 backdrop-filter backdrop-blur-lg w-full border-b border-gray-200">
+      <div class="container mx-auto px-4 py-3">
+        <a href="homepage.html" class="block py-2 text-gray-600 hover:text-green-600 hover:bg-gray-50 px-3 rounded-md">Home</a>
+        <a href="datacenter.html" class="block py-2 text-green-600 font-medium border-l-4 border-green-600 pl-2 bg-gray-50 px-3 rounded-md">Data Center</a>
+        <a href="community.html" class="block py-2 text-green-600 font-medium border-l-4 border-green-600 pl-2 bg-gray-50 px-3 rounded-md">Community</a>
+        <a href="#" class="block py-2 text-white bg-green-600 hover:bg-green-700 px-3 rounded-md">Login</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section with Search -->
+  <section class="pt-24 pb-12 bg-gradient-to-r from-green-800 to-green-600 text-white">
+    <div class="container mx-auto px-4">
+      <div class="max-w-4xl mx-auto text-center">
+        <h1 class="text-4xl md:text-5xl font-bold mb-6">ESG Data Center</h1>
+        <p class="text-xl mb-8">Access comprehensive ESG data, ratings, and sustainability reports</p>
+        
+        <!-- Search Bar -->
+        <div class="max-w-3xl mx-auto relative">
+          <div class="flex bg-white rounded-lg overflow-hidden shadow-lg">
+            <div class="w-full">
+              <input type="text" placeholder="Search for companies, funds, or ESG metrics..." 
+                class="w-full px-6 py-4 text-gray-700 focus:outline-none">
+            </div>
+            <button class="bg-green-600 hover:bg-green-700 text-white px-6 flex items-center justify-center transition duration-300">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+              </svg>
+            </button>
+          </div>
+          <div class="mt-3 flex flex-wrap justify-center gap-2">
+            <span class="text-sm bg-white bg-opacity-20 rounded-full px-3 py-1">Apple</span>
+            <span class="text-sm bg-white bg-opacity-20 rounded-full px-3 py-1">Tesla</span>
+            <span class="text-sm bg-white bg-opacity-20 rounded-full px-3 py-1">ESG Funds</span>
+            <span class="text-sm bg-white bg-opacity-20 rounded-full px-3 py-1">Carbon Emissions</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Data Metrics Section -->
+  <section class="py-16 bg-white">
+    <div class="container mx-auto px-4">
+      <h2 class="text-3xl font-bold text-center section-title gradient mb-12">Sentiment Analysis</h2>
+      
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- Word Cloud Visualization -->
+        <div class="bg-white rounded-xl shadow-md overflow-hidden border-t-4 border-blue-500 md:col-span-2">
+          <div class="p-6">
+            <div class="flex items-center mb-4">
+              <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center mr-4">
+                <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"></path>
+                </svg>
+              </div>
+              <h3 class="text-xl font-bold text-gray-800">ESG Topics Word Cloud</h3>
+            </div>
+            
+            <div class="h-80 flex justify-center items-center">
+              <img src="word cloud.png" alt="ESG Topics Word Cloud" class="w-full h-full object-cover">
+            </div>
+            
+            <p class="mt-4 text-gray-600">Visual representation of the most frequently discussed ESG topics in news articles, social media, and corporate reports.</p>
+          </div>
+        </div>
+        
+        <!-- Sentiment Summary -->
+        <div class="bg-white rounded-xl shadow-md overflow-hidden border-t-4 border-purple-500">
+          <div class="p-6">
+            <div class="flex items-center mb-4">
+              <div class="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center mr-4">
+                <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                </svg>
+              </div>
+              <h3 class="text-xl font-bold text-gray-800">Sentiment Distribution</h3>
+            </div>
+            
+            <div class="mt-6">
+              <!-- Positive Sentiment -->
+              <div class="mb-6">
+                <div class="flex justify-between mb-2">
+                  <span class="text-sm font-medium text-gray-700 flex items-center">
+                    <svg class="w-5 h-5 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    Positive
+                  </span>
+                  <span class="text-sm font-medium text-green-600">42%</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-3">
+                  <div class="bg-green-500 h-3 rounded-full" style="width: 42%"></div>
+                </div>
+              </div>
+              
+              <!-- Neutral Sentiment -->
+              <div class="mb-6">
+                <div class="flex justify-between mb-2">
+                  <span class="text-sm font-medium text-gray-700 flex items-center">
+                    <svg class="w-5 h-5 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    Neutral
+                  </span>
+                  <span class="text-sm font-medium text-gray-600">35%</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-3">
+                  <div class="bg-gray-500 h-3 rounded-full" style="width: 35%"></div>
+                </div>
+              </div>
+              
+              <!-- Negative Sentiment -->
+              <div class="mb-6">
+                <div class="flex justify-between mb-2">
+                  <span class="text-sm font-medium text-gray-700 flex items-center">
+                    <svg class="w-5 h-5 mr-2 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    Negative
+                  </span>
+                  <span class="text-sm font-medium text-red-600">23%</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-3">
+                  <div class="bg-red-500 h-3 rounded-full" style="width: 23%"></div>
+                </div>
+              </div>
+              
+              <div class="border-t border-gray-200 pt-4 mt-4">
+                <h4 class="font-semibold text-gray-800 mb-3">Top ESG Keywords</h4>
+                <div class="grid grid-cols-2 gap-2">
+                  <div class="flex items-center">
+                    <span class="inline-block w-3 h-3 rounded-full bg-green-500 mr-2"></span>
+                    <span class="text-sm">Sustainability</span>
+                    <span class="ml-auto text-xs text-gray-500">24%</span>
+                  </div>
+                  <div class="flex items-center">
+                    <span class="inline-block w-3 h-3 rounded-full bg-blue-500 mr-2"></span>
+                    <span class="text-sm">Climate</span>
+                    <span class="ml-auto text-xs text-gray-500">18%</span>
+                  </div>
+                  <div class="flex items-center">
+                    <span class="inline-block w-3 h-3 rounded-full bg-purple-500 mr-2"></span>
+                    <span class="text-sm">Governance</span>
+                    <span class="ml-auto text-xs text-gray-500">16%</span>
+                  </div>
+                  <div class="flex items-center">
+                    <span class="inline-block w-3 h-3 rounded-full bg-yellow-500 mr-2"></span>
+                    <span class="text-sm">Diversity</span>
+                    <span class="ml-auto text-xs text-gray-500">14%</span>
+                  </div>
+                  <div class="flex items-center">
+                    <span class="inline-block w-3 h-3 rounded-full bg-red-500 mr-2"></span>
+                    <span class="text-sm">Emissions</span>
+                    <span class="ml-auto text-xs text-gray-500">12%</span>
+                  </div>
+                  <div class="flex items-center">
+                    <span class="inline-block w-3 h-3 rounded-full bg-indigo-500 mr-2"></span>
+                    <span class="text-sm">Renewable</span>
+                    <span class="ml-auto text-xs text-gray-500">10%</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Additional Topic Analysis -->
+      <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- Environmental Topics -->
+        <div class="bg-white rounded-xl shadow-md overflow-hidden">
+          <div class="bg-green-600 py-3 px-6">
+            <h3 class="text-white font-semibold">Environmental Topics</h3>
+          </div>
+          <div class="p-6">
+            <div class="space-y-4">
+              <div class="flex justify-between items-center">
+                <span class="text-sm font-medium">Climate Action</span>
+                <span class="text-sm font-medium text-green-600">8,426 mentions</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-sm font-medium">Carbon Neutrality</span>
+                <span class="text-sm font-medium text-green-600">7,215 mentions</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-sm font-medium">Renewable Energy</span>
+                <span class="text-sm font-medium text-green-600">6,892 mentions</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-sm font-medium">Resource Conservation</span>
+                <span class="text-sm font-medium text-green-600">5,740 mentions</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Social Topics -->
+        <div class="bg-white rounded-xl shadow-md overflow-hidden">
+          <div class="bg-blue-600 py-3 px-6">
+            <h3 class="text-white font-semibold">Social Topics</h3>
+          </div>
+          <div class="p-6">
+            <div class="space-y-4">
+              <div class="flex justify-between items-center">
+                <span class="text-sm font-medium">Diversity & Inclusion</span>
+                <span class="text-sm font-medium text-blue-600">7,850 mentions</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-sm font-medium">Labor Practices</span>
+                <span class="text-sm font-medium text-blue-600">6,275 mentions</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-sm font-medium">Human Rights</span>
+                <span class="text-sm font-medium text-blue-600">5,930 mentions</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-sm font-medium">Community Engagement</span>
+                <span class="text-sm font-medium text-blue-600">5,125 mentions</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Governance Topics -->
+        <div class="bg-white rounded-xl shadow-md overflow-hidden">
+          <div class="bg-purple-600 py-3 px-6">
+            <h3 class="text-white font-semibold">Governance Topics</h3>
+          </div>
+          <div class="p-6">
+            <div class="space-y-4">
+              <div class="flex justify-between items-center">
+                <span class="text-sm font-medium">Board Diversity</span>
+                <span class="text-sm font-medium text-purple-600">7,910 mentions</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-sm font-medium">Executive Compensation</span>
+                <span class="text-sm font-medium text-purple-600">7,430 mentions</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-sm font-medium">Business Ethics</span>
+                <span class="text-sm font-medium text-purple-600">6,245 mentions</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-sm font-medium">Corporate Transparency</span>
+                <span class="text-sm font-medium text-purple-600">5,835 mentions</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Company Sustainability Reports -->
+  <section class="py-16 bg-gray-50">
+    <div class="container mx-auto px-4">
+      <h2 class="text-3xl font-bold text-center section-title gradient mb-4">Company Sustainability Reports</h2>
+      <p class="text-center text-gray-600 max-w-3xl mx-auto mb-12">Access the latest sustainability and ESG reports from leading global organizations</p>
+      
+      <!-- Filter Tabs -->
+      <div class="flex justify-center mb-8">
+        <div class="inline-flex bg-white rounded-lg shadow-sm p-1">
+          <button class="px-4 py-2 rounded-md bg-green-500 text-white font-medium">All Reports</button>
+          <button class="px-4 py-2 rounded-md text-gray-700 hover:bg-gray-100 font-medium">Technology</button>
+          <button class="px-4 py-2 rounded-md text-gray-700 hover:bg-gray-100 font-medium">Financial</button>
+          <button class="px-4 py-2 rounded-md text-gray-700 hover:bg-gray-100 font-medium">Energy</button>
+          <button class="px-4 py-2 rounded-md text-gray-700 hover:bg-gray-100 font-medium">Manufacturing</button>
+        </div>
+      </div>
+      
+      <!-- Reports Table -->
+      <div class="bg-white shadow-md rounded-lg overflow-hidden">
+        <div class="overflow-x-auto table-container relative">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Company</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Industry</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Report Type</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Year</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ESG Score</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Download</th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              <!-- Apple -->
+              <tr class="hover:bg-gray-50">
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="flex items-center">
+                    <div class="flex-shrink-0 h-10 w-10 flex items-center justify-center">
+                      <img class="h-8 w-auto" src="Apple.png" alt="Apple">
+                    </div>
+                    <div class="ml-4">
+                      <div class="text-sm font-medium text-gray-900">
+                        <a href="Apple.html" class="hover:underline hover:text-black">Apple Inc.</a>
+                      </div>
+                      <div class="text-sm text-gray-500">AAPL</div>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm text-gray-900">Technology</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm text-gray-900">Environmental Progress Report</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm text-gray-900">2024</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">AAA</span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                  <a href="#" class="text-green-600 hover:text-green-900 flex items-center">
+                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                    </svg>
+                    PDF
+                  </a>
+                </td>
+              </tr>
+              
+              <!-- Tesla -->
+              <tr class="hover:bg-gray-50">
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="flex items-center">
+                    <div class="flex-shrink-0 h-10 w-10 flex items-center justify-center">
+                      <img class="h-8 w-auto" src="Tesla.png" alt="Tesla">
+                    </div>
+                    <div class="ml-4">
+                      <div class="text-sm font-medium text-gray-900">
+                        <a href="#" class="hover:underline hover:text-black">Tesla, Inc.</a>
+                      </div>
+                      <div class="text-sm text-gray-500">TSLA</div>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm text-gray-900">Automotive</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm text-gray-900">Impact Report</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm text-gray-900">2024</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">AA</span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                  <a href="#" class="text-green-600 hover:text-green-900 flex items-center">
+                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                    </svg>
+                    PDF
+                  </a>
+                </td>
+              </tr>
+              
+              <!-- ICBC -->
+              <tr class="hover:bg-gray-50">
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="flex items-center">
+                    <div class="flex-shrink-0 h-10 w-10 flex items-center justify-center">
+                      <img class="h-8 w-auto" src="ICBC.png" alt="ICBC">
+                    </div>
+                    <div class="ml-4">
+                      <div class="text-sm font-medium text-gray-900">
+                        <a href="#" class="hover:underline hover:text-black">Industrial & Commercial Bank of China</a>
+                      </div>
+                      <div class="text-sm text-gray-500">1398.HK</div>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm text-gray-900">Financial</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm text-gray-900">ESG Sustainability Report</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm text-gray-900">2024</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">A</span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                  <a href="#" class="text-green-600 hover:text-green-900 flex items-center">
+                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                    </svg>
+                    PDF
+                  </a>
+                </td>
+              </tr>
+              
+              <!-- Alibaba -->
+              <tr class="hover:bg-gray-50">
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="flex items-center">
+                    <div class="flex-shrink-0 h-10 w-10 flex items-center justify-center">
+                      <img class="h-8 w-auto max-w-[80%] object-contain" src="Alibaba.png" alt="Alibaba">
+                    </div>
+                    <div class="ml-4">
+                      <div class="text-sm font-medium text-gray-900">Alibaba Group</div>
+                      <div class="text-sm text-gray-500">BABA</div>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm text-gray-900">Technology</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm text-gray-900">Sustainability Report</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm text-gray-900">2023</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">BBB</span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                  <a href="#" class="text-green-600 hover:text-green-900 flex items-center">
+                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                    </svg>
+                    PDF
+                  </a>
+                </td>
+              </tr>
+              
+              <!-- Amazon -->
+              <tr class="hover:bg-gray-50">
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="flex items-center">
+                    <div class="flex-shrink-0 h-10 w-10 flex items-center justify-center">
+                      <img class="h-8 w-auto" src="Amazon.png" alt="Amazon">
+                    </div>
+                    <div class="ml-4">
+                      <div class="text-sm font-medium text-gray-900">Amazon.com, Inc.</div>
+                      <div class="text-sm text-gray-500">AMZN</div>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm text-gray-900">Technology</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm text-gray-900">Sustainability Report</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm text-gray-900">2024</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">AA</span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                  <a href="#" class="text-green-600 hover:text-green-900 flex items-center">
+                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                    </svg>
+                    PDF
+                  </a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          
+          <!-- 使用类名方式添加毛玻璃效果覆盖层 -->
+          <div class="lock-overlay flex flex-col items-center justify-center">
+            <div class="lock-icon">
+              <svg style="width: 28px; height: 28px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+              </svg>
+            </div>
+            <a href="#" class="unlock-button">
+              <span>Unlock all 8,430 companies data</span>
+              <svg style="width: 16px; height: 16px; margin-left: 8px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+              </svg>
+            </a>
+          </div>
+        </div>
+        
+        <!-- Pagination -->
+        <div class="px-6 py-3 bg-gray-50 border-t border-gray-200 flex items-center justify-between">
+          <div class="flex-1 flex justify-between sm:hidden">
+            <a href="#" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">Previous</a>
+            <a href="#" class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">Next</a>
+          </div>
+          <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+            <div>
+              <p class="text-sm text-gray-700">
+                Showing <span class="font-medium">1</span> to <span class="font-medium">5</span> of <span class="font-medium">8,430 </span> results
+              </p>
+            </div>
+            <div>
+              <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                  <span class="sr-only">Previous</span>
+                  <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+                  </svg>
+                </a>
+                <a href="#" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-green-50 text-sm font-medium text-green-600 hover:bg-green-100">1</a>
+                <a href="#" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">2</a>
+                <a href="#" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">3</a>
+                <span class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700">...</span>
+                <a href="#" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">169</a>
+                <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                  <span class="sr-only">Next</span>
+                  <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                  </svg>
+                </a>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ESG Funds and Ratings -->
+  <section class="py-16 bg-white">
+    <div class="container mx-auto px-4">
+      <h2 class="text-3xl font-bold text-center section-title gradient mb-4">ESG Funds & Ratings</h2>
+      <p class="text-center text-gray-600 max-w-3xl mx-auto mb-12">Explore top-performing ESG funds and evaluate their sustainability impact and financial performance</p>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+        <!-- ESG Rating Distribution -->
+        <div class="bg-white rounded-xl shadow-md overflow-hidden p-6">
+          <h3 class="text-xl font-bold text-gray-800 mb-4">Global ESG Rating Distribution</h3>
+          <div class="aspect-w-16 aspect-h-9 relative">
+            <canvas id="ratingDistribution" class="w-full h-80"></canvas>
+          </div>
+        </div>
+        
+        <!-- ESG Performance by Sector -->
+        <div class="bg-white rounded-xl shadow-md overflow-hidden p-6">
+          <h3 class="text-xl font-bold text-gray-800 mb-6">ESG Performance by Sector</h3>
+          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mt-4">
+            <!-- Technology (Highest Score) -->
+            <div class="flex flex-col items-center bg-gray-50 p-4 rounded-lg border border-gray-100 hover:shadow-md transition-all duration-300">
+              <div class="w-12 h-12 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-3">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+              </div>
+              <h4 class="font-semibold text-gray-900 text-center mb-1">Technology</h4>
+              <div class="flex items-center">
+                <span class="text-green-600 font-bold mr-1">78</span>
+                <span class="text-xs text-gray-500">/100</span>
+              </div>
+              <div class="w-full bg-gray-200 rounded-full h-1.5 mt-2">
+                <div class="bg-green-600 h-1.5 rounded-full" style="width: 78%"></div>
+              </div>
+            </div>
+            
+            <!-- Healthcare -->
+            <div class="flex flex-col items-center bg-gray-50 p-4 rounded-lg border border-gray-100 hover:shadow-md transition-all duration-300">
+              <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mb-3">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                </svg>
+              </div>
+              <h4 class="font-semibold text-gray-900 text-center mb-1">Healthcare</h4>
+              <div class="flex items-center">
+                <span class="text-green-600 font-bold mr-1">72</span>
+                <span class="text-xs text-gray-500">/100</span>
+              </div>
+              <div class="w-full bg-gray-200 rounded-full h-1.5 mt-2">
+                <div class="bg-green-600 h-1.5 rounded-full" style="width: 72%"></div>
+              </div>
+            </div>
+            
+            <!-- Consumer -->
+            <div class="flex flex-col items-center bg-gray-50 p-4 rounded-lg border border-gray-100 hover:shadow-md transition-all duration-300">
+              <div class="w-12 h-12 bg-yellow-100 text-yellow-600 rounded-full flex items-center justify-center mb-3">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                </svg>
+              </div>
+              <h4 class="font-semibold text-gray-900 text-center mb-1">Consumer</h4>
+              <div class="flex items-center">
+                <span class="text-green-600 font-bold mr-1">68</span>
+                <span class="text-xs text-gray-500">/100</span>
+              </div>
+              <div class="w-full bg-gray-200 rounded-full h-1.5 mt-2">
+                <div class="bg-green-600 h-1.5 rounded-full" style="width: 68%"></div>
+              </div>
+            </div>
+            
+            <!-- Financial -->
+            <div class="flex flex-col items-center bg-gray-50 p-4 rounded-lg border border-gray-100 hover:shadow-md transition-all duration-300">
+              <div class="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center mb-3">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <h4 class="font-semibold text-gray-900 text-center mb-1">Financial</h4>
+              <div class="flex items-center">
+                <span class="text-green-600 font-bold mr-1">65</span>
+                <span class="text-xs text-gray-500">/100</span>
+              </div>
+              <div class="w-full bg-gray-200 rounded-full h-1.5 mt-2">
+                <div class="bg-green-600 h-1.5 rounded-full" style="width: 65%"></div>
+              </div>
+            </div>
+            
+            <!-- Utilities -->
+            <div class="flex flex-col items-center bg-gray-50 p-4 rounded-lg border border-gray-100 hover:shadow-md transition-all duration-300">
+              <div class="w-12 h-12 bg-sky-100 text-sky-600 rounded-full flex items-center justify-center mb-3">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+              </div>
+              <h4 class="font-semibold text-gray-900 text-center mb-1">Utilities</h4>
+              <div class="flex items-center">
+                <span class="text-yellow-600 font-bold mr-1">61</span>
+                <span class="text-xs text-gray-500">/100</span>
+              </div>
+              <div class="w-full bg-gray-200 rounded-full h-1.5 mt-2">
+                <div class="bg-yellow-500 h-1.5 rounded-full" style="width: 61%"></div>
+              </div>
+            </div>
+            
+            <!-- Materials -->
+            <div class="flex flex-col items-center bg-gray-50 p-4 rounded-lg border border-gray-100 hover:shadow-md transition-all duration-300">
+              <div class="w-12 h-12 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center mb-3">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+                </svg>
+              </div>
+              <h4 class="font-semibold text-gray-900 text-center mb-1">Materials</h4>
+              <div class="flex items-center">
+                <span class="text-yellow-600 font-bold mr-1">55</span>
+                <span class="text-xs text-gray-500">/100</span>
+              </div>
+              <div class="w-full bg-gray-200 rounded-full h-1.5 mt-2">
+                <div class="bg-yellow-500 h-1.5 rounded-full" style="width: 55%"></div>
+              </div>
+            </div>
+            
+            <!-- Energy (Lowest Score) -->
+            <div class="flex flex-col items-center bg-gray-50 p-4 rounded-lg border border-gray-100 hover:shadow-md transition-all duration-300">
+              <div class="w-12 h-12 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center mb-3">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+              </div>
+              <h4 class="font-semibold text-gray-900 text-center mb-1">Energy</h4>
+              <div class="flex items-center">
+                <span class="text-yellow-600 font-bold mr-1">52</span>
+                <span class="text-xs text-gray-500">/100</span>
+              </div>
+              <div class="w-full bg-gray-200 rounded-full h-1.5 mt-2">
+                <div class="bg-yellow-500 h-1.5 rounded-full" style="width: 52%"></div>
+              </div>
+            </div>
+            
+            <!-- Real Estate -->
+            <div class="flex flex-col items-center bg-gray-50 p-4 rounded-lg border border-gray-100 hover:shadow-md transition-all duration-300">
+              <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mb-3">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                </svg>
+              </div>
+              <h4 class="font-semibold text-gray-900 text-center mb-1">Real Estate</h4>
+              <div class="flex items-center">
+                <span class="text-yellow-600 font-bold mr-1">58</span>
+                <span class="text-xs text-gray-500">/100</span>
+              </div>
+              <div class="w-full bg-gray-200 rounded-full h-1.5 mt-2">
+                <div class="bg-yellow-500 h-1.5 rounded-full" style="width: 58%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Top ESG Funds Table -->
+      <h3 class="text-2xl font-bold text-gray-800 mb-6">ESG Funds Performance</h3>
+      
+      <div class="bg-white shadow-md rounded-lg overflow-hidden mb-8">
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fund Name</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ESG Rating</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">1 Year Return</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">3 Year Return</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">AUM (Billion $)</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Details</th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              <!-- Fund 1 -->
+              <tr class="hover:bg-gray-50">
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm font-medium text-gray-900">
+                    <a href="invest.html" class="hover:underline hover:text-black">Global Green Bond Fund</a>
+                  </div>
+                  <div class="text-xs text-gray-500">GGBIX</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm text-gray-900">Fixed Income</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">AAA</span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm text-green-600 font-medium">+8.2%</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm text-green-600 font-medium">+24.5%</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm text-gray-900">$6.4B</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                  <a href="invest.html" class="text-green-600 hover:text-green-900 hover:underline">View Fund</a>
+                </td>
+              </tr>
+              
+              <!-- Fund 2 -->
+              <tr class="hover:bg-gray-50">
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm font-medium text-gray-900">
+                    <a href="#" class="hover:underline hover:text-black">Sustainable Leaders ETF</a>
+                  </div>
+                  <div class="text-xs text-gray-500">SUSL</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm text-gray-900">US Equity</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">AA</span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm text-green-600 font-medium">+16.2%</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm text-green-600 font-medium">+54.8%</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm text-gray-900">$8.7B</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                  <a href="#" class="text-green-600 hover:text-green-900 hover:underline">View Fund</a>
+                </td>
+              </tr>
+              
+              <!-- Fund 3 -->
+              <tr class="hover:bg-gray-50">
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm font-medium text-gray-900">
+                    <a href="#" class="hover:underline hover:text-black">Clean Energy Innovation Fund</a>
+                  </div>
+                  <div class="text-xs text-gray-500">CLNRX</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm text-gray-900">Sector - Energy</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">AAA</span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm text-green-600 font-medium">+22.4%</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm text-green-600 font-medium">+76.9%</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm text-gray-900">$5.3B</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                  <a href="#" class="text-green-600 hover:text-green-900 hover:underline">View Fund</a>
+                </td>
+              </tr>
+              
+              <!-- Fund 4 -->
+              <tr class="hover:bg-gray-50">
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm font-medium text-gray-900">
+                    <a href="#" class="hover:underline hover:text-black">Social Impact Bond Fund</a>
+                  </div>
+                  <div class="text-xs text-gray-500">SBDFX</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm text-gray-900">Fixed Income</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">AA</span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm text-green-600 font-medium">+7.8%</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm text-green-600 font-medium">+18.6%</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm text-gray-900">$3.2B</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                  <a href="#" class="text-green-600 hover:text-green-900 hover:underline">View Fund</a>
+                </td>
+              </tr>
+              
+              <!-- Fund 5 -->
+              <tr class="hover:bg-gray-50">
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm font-medium text-gray-900">
+                    <a href="#" class="hover:underline hover:text-black">Carbon Intensive Mining Fund</a>
+                  </div>
+                  <div class="text-xs text-gray-500">CIMFX</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm text-gray-900">Mining & Resources</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">CCC</span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm text-red-600 font-medium">-8.3%</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm text-red-600 font-medium">-12.7%</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm text-gray-900">$1.2B</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                  <a href="#" class="text-green-600 hover:text-green-900 hover:underline">View Fund</a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      
+      <div class="text-center">
+        <a href="#" class="inline-flex items-center px-6 py-3 border border-green-600 text-green-600 bg-white rounded-md shadow-sm font-medium hover:bg-green-600 hover:text-white focus:outline-none transition duration-300">
+          View All ESG Funds
+          <svg class="ml-2 -mr-1 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Call to Action -->
+  <section class="py-16 bg-gradient-to-r from-green-800 to-green-600 text-white">
+    <div class="container mx-auto px-4 text-center">
+      <h2 class="text-3xl font-bold mb-4">Ready to access full ESG data?</h2>
+      <p class="text-xl mb-8 max-w-3xl mx-auto">Get unlimited access to sustainability reports, company ratings, and detailed ESG metrics with a premium subscription</p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="#" class="inline-block px-8 py-4 bg-white text-green-700 font-bold rounded-lg hover:bg-gray-100 transition duration-300 shadow-lg">Start Free Trial</a>
+        <a href="#" class="inline-block px-8 py-4 bg-transparent border-2 border-white text-white font-bold rounded-lg hover:bg-white hover:bg-opacity-10 transition duration-300">View Pricing</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gray-900 py-16 border-t-4 border-green-500">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div>
+          <h3 class="text-white text-xl font-bold mb-4">ESG PIC</h3>
+          <p class="text-gray-400 mb-6">Sustainable Development Information Platform - Providing comprehensive ESG data analysis and evaluation services.</p>
+          <div class="flex space-x-4">
+            <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:text-white hover:bg-blue-600 transition-colors duration-300">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" />
+              </svg>
+            </a>
+            <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:text-white hover:bg-pink-600 transition-colors duration-300">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
+              </svg>
+            </a>
+            <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:text-white hover:bg-black transition-colors duration-300">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z" />
+              </svg>
+            </a>
+          </div>
+        </div>
+        
+        <!-- Quick Links -->
+        <div>
+          <h3 class="text-white text-xl font-bold mb-4">Quick Links</h3>
+          <ul class="text-gray-400">
+            <li class="mb-3">
+              <a href="homepage.html" class="hover:text-green-500 transition-colors duration-300 flex items-center">
+                <svg class="w-4 h-4 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+                Home
+              </a>
+            </li>
+            <li class="mb-3">
+              <a href="datacenter.html" class="hover:text-green-500 transition-colors duration-300 flex items-center">
+                <svg class="w-4 h-4 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+                ESG Data Center
+              </a>
+            </li>
+            <li class="mb-3">
+              <a href="datacenter.html" class="hover:text-green-500 transition-colors duration-300 flex items-center">
+                <svg class="w-4 h-4 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+                ESG Rating System
+              </a>
+            </li>
+            <li class="mb-3">
+              <a href="community.html" class="hover:text-green-500 transition-colors duration-300 flex items-center">
+                <svg class="w-4 h-4 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+                Community Forum
+              </a>
+            </li>
+          </ul>
+        </div>
+        
+        <!-- Additional Info -->
+        <div>
+          <h3 class="text-white text-xl font-bold mb-4">Subscribe</h3>
+          <p class="text-gray-400 mb-4">Subscribe to our newsletter to receive the latest updates and news about ESG developments.</p>
+          <div class="flex">
+            <input type="email" placeholder="Your email" class="bg-gray-800 text-white px-4 py-2 rounded-l focus:outline-none focus:ring-2 focus:ring-green-500 w-full">
+            <button class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-r transition-colors duration-300">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Bottom Footer -->
+      <div class="border-t border-gray-800 mt-12 pt-8 text-gray-400 text-sm">
+        <div class="flex flex-col md:flex-row md:justify-between">
+          <div class="mb-4 md:mb-0">
+            <p>&copy; 2025 ESG PIC. All rights reserved.</p>
+          </div>
+          <div class="flex space-x-4">
+            <a href="#" class="hover:text-green-500 transition-colors duration-300">Privacy Policy</a>
+            <a href="#" class="hover:text-green-500 transition-colors duration-300">Terms of Service</a>
+            <a href="#" class="hover:text-green-500 transition-colors duration-300">Cookie Policy</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Mobile menu toggle
+      const menuToggle = document.getElementById('menu-toggle');
+      const mobileMenu = document.getElementById('mobile-menu');
+      
+      if (menuToggle && mobileMenu) {
+        menuToggle.addEventListener('click', function() {
+          mobileMenu.classList.toggle('hidden');
+        });
+      }
+
+      // Navigation scroll effect
+      window.addEventListener('scroll', function() {
+        const navbar = document.querySelector('.navbar');
+        if (window.scrollY > 50) {
+          navbar.classList.add('scrolled');
+        } else {
+          navbar.classList.remove('scrolled');
+        }
+      });
+
+      // Initialize Chart.js charts
+      // ESG Rating Distribution Chart
+      const ratingDistCtx = document.getElementById('ratingDistribution');
+      if (ratingDistCtx) {
+        // 计算总评级数
+        const ratingData = [12, 19, 25, 18, 14, 8, 4];
+        const total = ratingData.reduce((a, b) => a + b, 0);
+        
+        // 评级标签
+        const ratingLabels = ['AAA', 'AA', 'A', 'BBB', 'BB', 'B', 'CCC'];
+        
+        // 注册数据标签插件
+        Chart.register(ChartDataLabels);
+        
+        new Chart(ratingDistCtx, {
+          type: 'pie',
+          data: {
+            labels: ratingLabels,
+            datasets: [{
+              data: ratingData,
+              backgroundColor: [
+                '#22c55e', '#4ade80', '#86efac', '#fde047', '#facc15', '#f97316', '#ef4444'
+              ],
+              borderWidth: 1
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: {
+                position: 'right',
+                labels: {
+                  color: '#000000',
+                  font: {
+                    weight: 'bold'
+                  }
+                }
+              },
+              title: {
+                display: false
+              },
+              tooltip: {
+                callbacks: {
+                  label: function(context) {
+                    const label = context.label || '';
+                    const value = context.raw || 0;
+                    const percentage = Math.round((value / total) * 100);
+                    return `${label}: ${value} (${percentage}%)`;
+                  }
+                }
+              },
+              // 在饼图上显示百分比
+              datalabels: {
+                formatter: (value, ctx) => {
+                  const percentage = Math.round((value / total) * 100);
+                  return percentage + '%';
+                },
+                color: '#000000',
+                backgroundColor: 'rgba(255, 255, 255, 0.7)',
+                borderRadius: 4,
+                padding: {
+                  top: 2,
+                  right: 4,
+                  bottom: 2,
+                  left: 4
+                },
+                font: {
+                  weight: 'bold',
+                  size: 13
+                }
+              }
+            }
+          }
+        });
+      }
+    });
+  </script>
+
+  <script>
+  </script>
+</body>
+</html> 
